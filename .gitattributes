@@ -1,0 +1,14 @@
+# 저장소에서는 LF 로 고정합니다.
+# Windows 체크아웃 때 CRLF 로 바뀌면 diff 가 통째로 어긋납니다.
+* text=auto eol=lf
+
+# 바이너리는 건드리지 않음
+*.wav binary
+*.zip binary
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary
+
+# 패키지-lock 은 그대로 (npm 이 LF/LF 로 씁니다)
+package-lock.json text eol=lf

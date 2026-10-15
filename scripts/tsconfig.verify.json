@@ -1,0 +1,17 @@
+{
+  "$comment": "검증 스크립트 전용 빌드 설정. CommonJS 로 컴파일해 Node 가 바로 실행하게 합니다.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "strict": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "outDir": "../.verify-build",
+    "rootDir": "..",
+    "noEmit": false,
+    "isolatedModules": false
+  },
+  "include": ["../lib/**/*.ts", "verify.ts", "import-audio.ts"]
+}

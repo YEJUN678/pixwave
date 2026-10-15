@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "import:audio": "tsc -p scripts/tsconfig.verify.json && node .verify-build/scripts/import-audio.js",
+    "verify": "npm run import:audio && tsc -p scripts/tsconfig.verify.json && node .verify-build/scripts/verify.js"
   },
   "dependencies": {
     "next": "16.4.0",

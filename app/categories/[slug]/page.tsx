@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import PackCard from "@/components/pack-card";
 import AdSlot from "@/components/ad-slot";
 import { CATEGORIES, getCategory, packsByCategory, soundDuration } from "@/lib/packs";
+import { og, site } from "@/lib/site";
 
 export function generateStaticParams() {
   return CATEGORIES.map((category) => ({ slug: category.slug }));
@@ -31,6 +32,11 @@ export async function generateMetadata({
     title: `무료 ${category.name} — ${count}개 사운드`,
     description: `${category.description} 총 ${count}개의 무료 ${category.name}을 브라우저에서 먼저 듣고 WAV로 내려받으세요.`,
     alternates: { canonical: `/categories/${slug}` },
+    openGraph: og(
+      `/categories/${slug}`,
+      `무료 ${category.name} | ${site.name}`,
+      category.description,
+    ),
   };
 }
 

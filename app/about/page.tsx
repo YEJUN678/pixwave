@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CATEGORIES, PACKS, TOTAL_SOUNDS } from "@/lib/packs";
+import { og, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "서비스 소개",
   description:
     "Pixwave는 브라우저에서 바로 듣고 바로 받을 수 있는 무료 사운드 팩 라이브러리입니다. 모든 소리는 파형 파라미터로 합성됩니다.",
   alternates: { canonical: "/about" },
+  openGraph: og(
+    "/about",
+    `Pixwave란 | ${site.name}`,
+    "브라우저에서 바로 듣고 바로 받을 수 있는 무료 사운드 팩 라이브러리. 모든 소리는 파형 파라미터로 합성되거나 실제 녹음으로 제공됩니다.",
+  ),
 };
 
 const STEPS = [

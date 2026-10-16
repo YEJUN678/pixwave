@@ -7,7 +7,7 @@ import AdSlot from "@/components/ad-slot";
 import PackCard from "@/components/pack-card";
 import { formatDuration } from "@/lib/format";
 import { PACKS, getCategory, getPack, soundDuration } from "@/lib/packs";
-import { LICENSES } from "@/lib/site";
+import { LICENSES, og, site } from "@/lib/site";
 
 export function generateStaticParams() {
   return PACKS.map((pack) => ({ slug: pack.slug }));
@@ -32,10 +32,11 @@ export async function generateMetadata({
     title: `${pack.name} — ${pack.sounds.length}개 무료 사운드 팩`,
     description: `${pack.description} ${pack.sounds.length}개 사운드를 브라우저에서 먼저 듣고 WAV로 내려받으세요.`,
     alternates: { canonical: `/packs/${pack.slug}` },
-    openGraph: {
-      title: `${pack.name} | Pixwave`,
-      description: pack.description,
-    },
+    openGraph: og(
+      `/packs/${pack.slug}`,
+      `${pack.name} | ${site.name}`,
+      pack.description,
+    ),
   };
 }
 

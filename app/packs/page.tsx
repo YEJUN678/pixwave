@@ -2,11 +2,17 @@ import type { Metadata } from "next";
 import BrowseGrid from "@/components/browse-grid";
 import AdSlot from "@/components/ad-slot";
 import { PACKS, TOTAL_SOUNDS } from "@/lib/packs";
+import { og, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "전체 사운드 팩",
   description: `알림음, UI, 게임 효과음, 벨소리, 충전음까지 총 ${TOTAL_SOUNDS}개의 무료 사운드를 팩 단위로 확인하고 받으세요.`,
   alternates: { canonical: "/packs" },
+  openGraph: og(
+    "/packs",
+    `전체 사운드 팩 | ${site.name}`,
+    `무료 사운드 ${TOTAL_SOUNDS}개를 팩 단위로 들어보고 받으세요.`,
+  ),
 };
 
 export default function PacksPage() {

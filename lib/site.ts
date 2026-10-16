@@ -3,7 +3,7 @@ export const site = {
   tagline: "무료 사운드 팩 · 상업적 이용 가능",
   description:
     "알림음, UI, 게임 효과음, 벨소리까지. 브라우저에서 바로 듣고 WAV로 내려받는 무료 사운드 팩 라이브러리.",
-  url: "https://pixwave.example.com",
+  url: "https://pixwave.io",
   locale: "ko_KR",
 } as const;
 
@@ -12,6 +12,23 @@ export const site = {
  * 렌더 중에 `new Date()` 를 부르면 프리렌더가 불안정해지므로 모듈 상수로 고정합니다.
  */
 export const YEAR = new Date().getFullYear();
+
+/**
+ * Open Graph 태그를 한곳에서 만듭니다.
+ *
+ * Next 는 metadata 를 레이아웃 → 페이지 순으로 top-level 키 단위로 덮어씁니다.
+ * 페이지에서 `openGraph` 를 한 번만 지정하면 루트의 og:url / og:siteName 이
+ * 통째로 사라집니다 — 실제로 팩 상세 페이지에 og:url 이 빠진 이유입니다.
+ */
+export function og(path: string, title: string, description: string) {
+  return {
+    url: site.url + path,
+    siteName: site.name,
+    title,
+    description,
+    locale: site.locale,
+  };
+}
 
 export type License = {
   id: "CC0" | "CC-BY-4.0";

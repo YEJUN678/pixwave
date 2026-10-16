@@ -1,24 +1,28 @@
 /**
  * clickmon 광고 (배너 / 아이콘 / 전면)
  * ─────────────────────────────────────────────────────────────
- * 제 광고 코드는 전부 `document.write` 기반입니다. 이 방식은
- * **문서가 파싱되는 중에만** 안전합니다. 로드가 끝난 뒤 실행하면
- * `document.writeln` 이 문서 전체를 지워버립니다.
+ * 광고 코드가 전부 `document.write` 기반이라 **문서가 파싱되는 중에만**
+ * 안전합니다. 로드가 끝난 뒤 실행하면 `document.writeln` 이 문서 전체를
+ * 지워버립니다. 그래서 전부 파싱 중에 실행되도록 배치했습니다.
  *
- * 그래서 두 방식을 나눕니다.
+ *   - 배너  : React 하이드레이션이 주입 노드를 지우므로 iframe 으로 격리
+ *   - 전면  : body 직속 <script> — 하이드레이션에 지워지지 않음
+ *   - 아이콘: 전면과 동일
  *
- * 1. 파싱 중 실행해야 하는 것 → 서버에서 <script> 로 직접 출력
- *    (배너, 전면) — HTML 에 포함되므로 파싱 중에 자연히 실행됩니다.
- *
- * 2. 로드 후 실행해야 하는 것 → 동적으로 <script> 를 만들어 삽입
- *    (아이콘) — 플로팅 요소라 하이드레이션 뒤에 붙여야 합니다.
+ * ⚠ 절대 appendChild 로 바꾸지 마세요. 로드 이후 실행되는 스크립트가
+ *   내부에서 document.write 를 쓰면 문서 전체가 날아갑니다.
  */
 
 const BASE = "https://mtab.clickmon.co.kr/pop";
-const POP_AD = "CM_M_1003067%7C%5E%7CCM_A_1157408%7C%5E%7CAdver_M_1046207";
 
-/** 광고 계정 식별자는 환경변수로 뺍니다 */
-const ACCOUNT = process.env.NEXT_PUBLIC_CLICKMON_ACCOUNT ?? POP_AD;
+/**
+ * 광고 계정 식별자.
+ * 도메인(pixwave.io) 을 바꾸거나 계정을 교체할 때 이 값만 바꾸면 됩니다.
+ * .env.local 에 NEXT_PUBLIC_CLICKMON_ACCOUNT 로 둘 수도 있습니다.
+ */
+const ACCOUNT =
+  process.env.NEXT_PUBLIC_CLICKMON_ACCOUNT ??
+  "CM_M_1003067%7C%5E%7CCM_A_1157408%7C%5E%7CAdver_M_1046207";
 
 // ───────────────────── 1. 배너 (320x100) ─────────────────────
 

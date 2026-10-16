@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { slugifyFile, specToWav } from "@/lib/audio";
 import { createZip } from "@/lib/zip";
-import { LICENSES } from "@/lib/site";
+import { LICENSES, site } from "@/lib/site";
 import type { Pack, Sound } from "@/lib/packs";
 
 /** 파일 기반 사운드는 합성하지 않고 그대로 바이트를 읽는다 */
@@ -28,7 +28,7 @@ function buildLicenseText(pack: Pack): string {
     ` - ${license.summary}`,
     " - 이 팩의 WAV 파일은 수정 없이 사용해도 됩니다.",
     " - 재배포를 하려면 아래 출처를 함께 적어 주세요:",
-    "   https://pixwave.example.com/packs/" + pack.slug,
+    "   " + site.url + "/packs/" + pack.slug,
     "",
     `포함 사운드 (${pack.sounds.length}개)`,
     ...pack.sounds.map(

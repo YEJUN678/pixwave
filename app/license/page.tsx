@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CATEGORIES, PACKS } from "@/lib/packs";
-import { LICENSES, site } from "@/lib/site";
+import { LICENSES, og, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "라이선스 안내",
   description:
     "Pixwave 사운드 팩의 라이선스는 CC0와 CC BY 4.0입니다. 상업적 이용이 가능하며, 무엇이 되고 무엇이 안 되는지 정리했습니다.",
   alternates: { canonical: "/license" },
+  openGraph: og(
+    "/license",
+    `라이선스 안내 | ${site.name}`,
+    "CC0와 CC BY 4.0. 상업적 이용이 가능하며, 무엇이 되고 무엇이 안 되는지 정리했습니다.",
+  ),
 };
 
 const FAQ = [

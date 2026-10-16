@@ -1,0 +1,89 @@
+name: Deploy to GitHub Pages
+
+# 소스는 pixwave 저장소에 있고, 빌드 결과만 YEJUN678.github.io 로 넘깁니다.
+# 계정 직속(루트) URL 을 쓰기 위해 Pages 는 반드시 YEJUN678.github.io 저장소에서
+# 서빙해야 합니다. 저장소형 페이지(/pixwave)를 쓰려면 이 워크플로를 지우고
+# 같은 저장소에서 Pages 를 켜면 됩니다.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: 정적 빌드
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 사운드 검증
+        run: npm run verify
+
+      - name: 정적 export
+        run: npm run build
+        env:
+          # Pages 가 실제로 서빙할 주소를 명시합니다.
+          # 이게 없으면 canonical 이 pixwave.io 를 가리켜 버립니다.
+          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL || 'https://YEJUN678.github.io' }}
+          NEXT_PUBLIC_CLICKMON_ACCOUNT: ${{ secrets.CLICKMON_ACCOUNT }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    name: YEJUN678.github.io 로 배포
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # GitHub Pages 공식 액션은 현재 저장소로만 배포할 수 있습니다.
+      # 대상 저장소가 다르므로 빌드 산출물을 직접 푸시합니다.
+      - name: 빌드 산출물 준비
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: out
+
+      - name: Pages 저장소로 푸시
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ vars.PAGES_REPO }}
+          token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+          ref: main
+          path: pages-repo
+
+      - name: 배포
+        working-directory: pages-repo
+        run: |
+          # 이전 빌드 잔여물이 남지 않게 비웁니다
+          find . -mindepth 1 -maxdepth 1 -not -name .git -exec rm -rf {} +
+          cp -r ../out/. .
+          touch .nojekyll
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "변경 없음 — 배포를 건너뜁니다"
+            exit 0
+          fi
+          git commit -m "deploy: $(date -u '+%Y-%m-%d %H:%M:%S') UTC"
+          git push

@@ -3,7 +3,14 @@ export const site = {
   tagline: "무료 사운드 팩 · 상업적 이용 가능",
   description:
     "알림음, UI, 게임 효과음, 벨소리까지. 브라우저에서 바로 듣고 WAV로 내려받는 무료 사운드 팩 라이브러리.",
-  url: "https://pixwave.io",
+  /**
+   * canonical / sitemap / og:url 에 쓰이는 정식 도메인.
+   *
+   * GitHub Pages(github.io) 로 먼저 배포할 때는 NEXT_PUBLIC_SITE_URL 로
+   * 실제 배포 주소를 넘겨야 합니다. 그대로 두면 아직 없는
+   * pixwave.io 를 가리키게 됩니다.
+   */
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://pixwave.io").replace(/\/$/, ""),
   locale: "ko_KR",
 } as const;
 

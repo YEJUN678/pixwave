@@ -11,10 +11,18 @@
  *
  * lib/audio-files.ts 는 이 스크립트가 만드는 파일입니다. 직접 고치지 마세요.
  */
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 
-const SRC_DIR = "C:\\Users\\Administrator\\Downloads";
+/**
+ * 원본 녹음이 있는 디렉터리.
+ *
+ * 이 값은 이 컴퓨터에만 유효하므로 저장소에 박아두면 안 됩니다.
+ * (하드코딩했던 탓에 CI 가 ENOENT 로 죽었습니다)
+ * 우선순위: AUDIO_SRC_DIR 환경변수 → 저장소 바로 위 디렉터리.
+ * 원본 녹음은 저장소에 커밋하지 않으므로, 없는 환경(CI)에서는 아래 조기 종료로 빠집니다.
+ */
+const SRC_DIR = resolve(process.env.AUDIO_SRC_DIR || join(process.cwd(), ".."));
 const OUT_DIR = join(process.cwd(), "public", "audio");
 const REGISTRY = join(process.cwd(), "lib", "audio-files.ts");
 
@@ -367,6 +375,23 @@ function getOnsets(name: string): Event[] {
 }
 
 mkdirSync(OUT_DIR, { recursive: true });
+
+/**
+ * 원본 녹음이 없는 환경(CI 등)에서는 조용히 건너뜁니다.
+ *
+ * public/audio/*.wav 와 lib/audio-files.ts 는 이미 저장소에 커밋돼 있으므로
+ * 빌드에 이 스크립트가 꼭 필요하지는 않습니다. ENOENT 로 죽이면
+ * 배포 파이프라인 전체가 깨집니다.
+ */
+const missing = JOBS.filter((job) => !existsSync(join(SRC_DIR, job.src)));
+if (missing.length > 0) {
+  console.warn(
+    `\n원본 녹음 ${missing.length}/${JOBS.length}개를 ${SRC_DIR} 에서 찾지 못했습니다.\n` +
+      `AUDIO_SRC_DIR 환경변수로 원본이 있는 디렉터리를 지정하면 됩니다.\n` +
+      `이 파일들은 이미 public/audio/ 에 커밋되어 있으므로 건너뜁니다.\n`,
+  );
+  process.exit(0);
+}
 
 for (const job of JOBS) {
   const src = getSource(job.src);

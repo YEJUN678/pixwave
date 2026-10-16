@@ -106,9 +106,9 @@ S("my-sound", "내 사운드", "My Sound", "태그 태그", impact({ body: 120, 
 
 ### 실제 녹음 사운드
 
-1. 원본 WAV 를 `Downloads/` 에 놓습니다
+1. 원본 WAV 를 저장소 바로 위 디렉터리(`Downloads/`)에 놓습니다
 2. `scripts/import-audio.ts` 의 `JOBS` 에 등록합니다
-3. `npm run import:audio`
+3. `npm run import:audio` — 다른 곳에 있다면 `AUDIO_SRC_DIR` 로 경로를 지정합니다
 4. `lib/packs.ts` 에서 `F("id", "이름", "Name", "태그", "레지스트리키")`
 
 ## 실행
@@ -116,10 +116,15 @@ S("my-sound", "내 사운드", "My Sound", "태그 태그", impact({ body: 120, 
 ```bash
 npm install
 npm run dev            # http://localhost:3000
-npm run build          # 정적 92개 페이지 생성
+npm run build          # 정적 92개 페이지 생성 (out/)
+npm run verify         # 전수 검증 (원본 녹음 불필요)
 npm run import:audio   # 원본 녹음 재변환 (레지스트리 자동 갱신)
-npm run verify         # import + 전수 검증
+npm run verify:rebuild # import + verify
 ```
+
+`import:audio` 는 이 컴퓨터에만 있는 원본 녹음이 필요합니다. 원본을 찾지 못하면
+경고만 남기고 정상 종료합니다 — `public/audio/*.wav` 는 이미 저장소에 커밋돼
+있으므로 빌드·CI 에서는 `npm run verify` 만 돌리면 됩니다.
 
 ## 합성 엔진에 들어 있는 것
 

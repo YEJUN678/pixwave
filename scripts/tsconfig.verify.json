@@ -13,5 +13,5 @@
     "noEmit": false,
     "isolatedModules": false
   },
-  "include": ["../lib/**/*.ts", "verify.ts", "import-audio.ts"]
+  "include": ["../lib/**/*.ts", "verify.ts", "import-audio.ts", "deploy.ts"]
 }

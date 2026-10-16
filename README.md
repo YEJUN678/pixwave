@@ -120,7 +120,24 @@ npm run build          # 정적 92개 페이지 생성 (out/)
 npm run verify         # 전수 검증 (원본 녹음 불필요)
 npm run import:audio   # 원본 녹음 재변환 (레지스트리 자동 갱신)
 npm run verify:rebuild # import + verify
+npm run deploy         # YEJUN678.github.io 로 실제 배포
 ```
+
+## 배포
+
+계정 직속 URL(`https://YEJUN678.github.io`)로 서빙합니다.
+Pages 는 반드시 계정과 이름이 같은 저장소에서 켜야 하므로
+소스는 `pixwave`, 결과물만 `YEJUN678.github.io` 의 `main` 으로 갑니다.
+
+```bash
+npm run deploy
+```
+
+빌드 → 스테이징 → 푸시까지 한 번에. Pages 반영까지 1~2분.
+
+- 대상 저장소 / 주소 변경: 저장소 변수 `PAGES_REPO`, `SITE_URL`
+- 자동 배포(선택): 저장소에 `PAGES_DEPLOY_TOKEN` Secret 등록하면
+  GitHub Actions 가 push 마다 자동 배포합니다. 없으면 수동(`npm run deploy`).
 
 `import:audio` 는 이 컴퓨터에만 있는 원본 녹음이 필요합니다. 원본을 찾지 못하면
 경고만 남기고 정상 종료합니다 — `public/audio/*.wav` 는 이미 저장소에 커밋돼

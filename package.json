@@ -8,7 +8,8 @@
     "start": "next start",
     "import:audio": "tsc -p scripts/tsconfig.verify.json && node .verify-build/scripts/import-audio.js",
     "verify": "tsc -p scripts/tsconfig.verify.json && node .verify-build/scripts/verify.js",
-    "verify:rebuild": "npm run import:audio && npm run verify"
+    "verify:rebuild": "npm run import:audio && npm run verify",
+    "deploy": "tsc -p scripts/tsconfig.verify.json && node .verify-build/scripts/deploy.js"
   },
   "dependencies": {
     "next": "16.4.0",
